@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+cd "$(dirname "$0")/.."
+uv lock --upgrade-package homeassistant
+uv sync
+echo "Updated. Restart Home Assistant to apply."

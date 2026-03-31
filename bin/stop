@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+pkill -f "hass -c config" && echo "Home Assistant stopped" || echo "Home Assistant is not running"

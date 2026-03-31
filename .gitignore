@@ -5,3 +5,6 @@ config/
 .venv/
 __pycache__/
 *.pyc
+
+# settings
+*.local.json
