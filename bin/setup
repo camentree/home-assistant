@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+mkdir -p config/custom_components
+
+for repo_name in "lukas-clarke/eight_sleep:eight_sleep" "libdyson-wg/ha-dyson:dyson_local"; do
+  repo="${repo_name%%:*}"
+  name="${repo_name##*:}"
+
+  if [ -d "config/custom_components/$name" ]; then
+    echo "$name already installed, skipping."
+    continue
+  fi
+
+  echo "Installing $name..."
+  tag=$(wget -q -O - "https://api.github.com/repos/$repo/releases/latest" \
+    | grep '"tag_name"' | head -1 | cut -d'"' -f4)
+  echo "  Release: $tag"
+
+  tmpdir=$(mktemp -d)
+  wget -q -O "$tmpdir/release.zip" "https://github.com/$repo/archive/refs/tags/$tag.zip"
+  unzip -q "$tmpdir/release.zip" -d "$tmpdir/extracted"
+
+  src=$(find "$tmpdir/extracted" -type d -path "*/custom_components/$name" | head -1)
+  if [ -z "$src" ]; then
+    echo "  FAILED: could not find custom_components/$name in archive"
+    rm -rf "$tmpdir"
+    continue
+  fi
+
+  cp -r "$src" "config/custom_components/$name"
+  rm -rf "$tmpdir"
+  echo "  Done."
+done

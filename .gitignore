@@ -1,4 +1,3 @@
-# Home Assistant config and data (contains tokens, device keys, database)
 config/
 
 # Python / uv
