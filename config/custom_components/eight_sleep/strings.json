@@ -1,0 +1,117 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "data": {
+          "username": "[%key:common::config_flow::data::username%]",
+          "password": "[%key:common::config_flow::data::password%]",
+          "client_id": "[%key:common::config_flow::data::client_id%]",
+          "client_secret": "[%key:common::config_flow::data::client_secret%]"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to Eight Sleep cloud: {error}"
+    },
+    "abort": {
+      "already_configured": "[%key:common::config_flow::abort::already_configured_device%]",
+      "cannot_connect": "[%key:component::eight_sleep::config::error::cannot_connect%]"
+    }
+  },
+  "services": {
+    "heat_set": {
+      "name": "Heat set",
+      "description": "Sets heating/cooling level for eight sleep.",
+      "fields": {
+        "duration": {
+          "name": "Duration",
+          "description": "Duration to heat/cool at the target level in seconds. This value is only used if the Sleep Stage is set to 'Set Current Temperature'"
+        },
+        "target": {
+          "name": "Target Temperature",
+          "description": "Target cooling/heating level from -100 to 100."
+        },
+        "sleep_stage": {
+          "name": "Sleep Stage",
+          "description": "Select which sleep stage to set the temperature for."
+        }
+      }
+    },
+    "heat_increment": {
+      "name": "Heat Increment",
+      "description": "Offsets the current heating/cooling level",
+      "fields": {
+        "target": {
+          "name": "Increment",
+          "description": "How much to offset the current heating/cooling level. From -100 to 100."
+        }
+      }
+    },
+    "side_off": {
+      "name": "Side Off",
+      "description": "Turns off 8 sleep side."
+    },
+    "side_on": {
+      "name": "Side On",
+      "description": "Turns on 8 sleep side in smart mode."
+    },
+    "away_mode_start": {
+      "name": "Start Away Mode",
+      "description": "Turns on away mode for the 8 sleep side."
+    },
+    "away_mode_stop": {
+      "name": "Stop Away Mode",
+      "description": "Turns off away mode for the 8 sleep side."
+    },
+    "prime_pod": {
+      "name": "Prime Pod",
+      "description": "Will start the pod priming."
+    },
+    "set_bed_side": {
+      "name": "Set Bed Side",
+      "description": "Set the bed side for the targeted user. Options are Both, Left, or Right."
+    },
+    "set_routine_alarm": {
+      "name": "Set Routine Alarm",
+      "description": "Change the alarm time for the given routine ID and alarm ID."
+    },
+    "set_routine_bedtime": {
+      "name": "Set Routine Bedtime",
+      "description": "Change the bedtime for the given routine ID."
+    },
+    "set_one_off_alarm": {
+      "name": "Set One-off Alarm",
+      "description": "Sets a one-off alarm with custom vibration and thermal settings.",
+      "fields": {
+        "time": {
+          "name": "Time",
+          "description": "The time to set the alarm for (24-hour format)."
+        },
+        "enabled": {
+          "name": "Enabled",
+          "description": "Whether the alarm is enabled."
+        },
+        "vibration_enabled": {
+          "name": "Vibration Enabled",
+          "description": "Whether vibration is enabled for this alarm."
+        },
+        "vibration_power_level": {
+          "name": "Vibration Power Level",
+          "description": "The power level of vibration (20=low, 50=medium, 100=high)."
+        },
+        "vibration_pattern": {
+          "name": "Vibration Pattern",
+          "description": "The pattern of vibration (RISE or intense)."
+        },
+        "thermal_enabled": {
+          "name": "Thermal Enabled",
+          "description": "Whether thermal control is enabled for this alarm."
+        },
+        "thermal_level": {
+          "name": "Thermal Level",
+          "description": "The thermal level (-100=max cooling to +100=max heating)."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,203 @@
+heat_set:
+  target:
+    entity:
+      integration: eight_sleep
+      domain: sensor
+  fields:
+    duration:
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 28800
+          unit_of_measurement: seconds
+    target:
+      required: true
+      selector:
+        number:
+          min: -100
+          max: 100
+          unit_of_measurement: "°"
+    sleep_stage:
+      required: true
+      default: current
+      selector:
+        select:
+          mode: dropdown
+          options:
+            - label: Set Current Temperature
+              value: current
+            - label: Set Bedtime Temperature
+              value: bedTimeLevel
+            - label: Set Early Temperature
+              value: initialSleepLevel
+            - label: Set Late Temperature
+              value: finalSleepLevel
+heat_increment:
+  target:
+    entity:
+      integration: eight_sleep
+      domain: sensor
+  fields:
+    target:
+      required: true
+      selector:
+        number:
+          min: -100
+          max: 100
+          unit_of_measurement: "°"
+side_off:
+  target:
+    entity:
+      integration: eight_sleep
+      domain: sensor
+side_on:
+  target:
+    entity:
+      integration: eight_sleep
+      domain: sensor
+alarm_snooze:
+  target:
+    entity:
+      integration: eight_sleep
+      domain: sensor
+  fields:
+    duration:
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 1440
+          unit_of_measurement: minutes
+alarm_stop:
+  target:
+    entity:
+      integration: eight_sleep
+      domain: sensor
+alarm_dismiss:
+  target:
+    entity:
+      integration: eight_sleep
+      domain: sensor
+away_mode_start:
+  target:
+    entity:
+      integration: eight_sleep
+      domain: sensor
+away_mode_stop:
+  target:
+    entity:
+      integration: eight_sleep
+      domain: sensor
+prime_pod:
+  target:
+    entity:
+      integration: eight_sleep
+      domain: sensor
+set_bed_side:
+  target:
+    entity:
+      integration: eight_sleep
+      domain: sensor
+  fields:
+    bed_side_state:
+      required: true
+      default: solo
+      selector:
+        select:
+          mode: dropdown
+          options:
+            - label: Both
+              value: solo
+            - label: Left
+              value: left
+            - label: Right
+              value: right
+set_routine_alarm:
+  target:
+    entity:
+      integration: eight_sleep
+      domain: sensor
+  fields:
+    routine_id:
+      required: true
+      selector:
+        text:
+    alarm_id:
+      required: true
+      selector:
+        text:
+    alarm_time:
+      required: true
+      selector:
+        time:
+set_routine_bedtime:
+  target:
+    entity:
+      integration: eight_sleep
+      domain: sensor
+  fields:
+    routine_id:
+      required: true
+      selector:
+        text:
+    bedtime:
+      required: true
+      selector:
+        time:
+
+set_one_off_alarm:
+  target:
+    entity:
+      integration: eight_sleep
+      domain: sensor
+  fields:
+    time:
+      required: true
+      selector:
+        time:
+    enabled:
+      required: false
+      default: true
+      selector:
+        boolean:
+    vibration_enabled:
+      required: false
+      default: true
+      selector:
+        boolean:
+    vibration_power_level:
+      required: false
+      default: "50"
+      selector:
+        select:
+          options:
+            - label: "Low"
+              value: "20"
+            - label: "Medium"
+              value: "50"
+            - label: "High"
+              value: "100"
+    vibration_pattern:
+      required: false
+      default: "RISE"
+      selector:
+        select:
+          options:
+            - label: "Rise"
+              value: "RISE"
+            - label: "Intense"
+              value: "intense"
+    thermal_enabled:
+      required: false
+      default: true
+      selector:
+        boolean:
+    thermal_level:
+      required: false
+      default: 0
+      selector:
+        number:
+          min: -100
+          max: 100
+          unit_of_measurement: "°"

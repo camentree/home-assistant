@@ -87,7 +87,7 @@ The `config/` directory is gitignored — it contains credentials, device pairin
 
 ## Integrations
 
-- **Eight Sleep** — custom component (`lukas-clarke/eight_sleep`), config-flow only
+- **Eight Sleep** — custom component (`lukas-clarke/eight_sleep`), config-flow only. Vendored under `config/custom_components/eight_sleep/` and tracked in git because of a local patch — see [Apple Home off command re-enables the bed](#apple-home-off-command-re-enables-the-bed).
 - **Dyson** — custom component (`libdyson-wg/ha-dyson`), config-flow only
 - **HomeKit** — built-in, bridge mode on port 21064
 
@@ -164,3 +164,11 @@ OSError: [Errno 65] No route to host
 **Cause:** macOS Local Network Privacy silently blocks mDNS multicast (UDP to 224.0.0.251:5353) for processes spawned by LaunchAgents. This is not a network issue — multicast works fine from a terminal because terminal apps (Ghostty, Terminal.app, iTerm) are exempt.
 
 **Fix:** HA must run as a LaunchDaemon (root), which is exempt from Local Network Privacy. `bin/start` drops to user `camen` via `sudo -u camen` so hass itself never runs as root. A LaunchAgent will not work regardless of codesigning, .app bundle wrapping, or plist configuration.
+
+### Apple Home "off" command re-enables the bed
+
+**Symptom:** An Apple Home automation that sets an Eight Sleep climate accessory to "off" appears to take effect for a moment but the bed stays heating (or quickly turns back on). The target temperature dial in the Home app stays at its previous value.
+
+**Cause:** HomeKit doesn't send a single "off" command for a thermostat accessory — Apple Home pairs every `set_hvac_mode: off` with a follow-up `set_temperature` call that carries `hvac_mode: off` alongside the target temperature. The upstream `lukas-clarke/eight_sleep` integration's `async_set_temperature` ignores the `hvac_mode` kwarg and calls `pyEight.user.set_heating_level`, which unconditionally calls `turn_on_side()` before writing the level. The off command lands, then the temperature call immediately re-enables the side. A bare `set_temperature` on a bed that's currently off (e.g. the Home app sending only the new target on a side that was already off) hits the same code path.
+
+**Fix:** Patched locally in `config/custom_components/eight_sleep/climate.py`. `async_set_temperature` now short-circuits when `hvac_mode: off` is passed in the call or when the bed is already off — it stores the new target and writes state without pushing to the device. `async_set_hvac_mode(HEAT_COOL)` calls `set_heating_level` directly instead of recursing through `async_set_temperature`, so the turn-on flow still restores the stored target.
